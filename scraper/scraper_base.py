@@ -7,16 +7,20 @@ from urllib.parse import urlparse
 import csv
 import os
 import fitz
+from enum import Enum
+from datetime import datetime
 
 class Scraper:
     PDF_FOLDER_NAME = 'files'
     CSV_FILE_NAME = 'publications.csv'
+    LAST_DATE = None
 
     def __init__(self, base_url):
         self.base_url = base_url
         self.driver = self.init_driver()
         self.prepare_output()
         self.data = []
+        self.LAST_DATE = self.convert_to_date_type('31.12.2021', '%d.%m.%Y').date()
     
     def init_driver(self):
         user_agent = "Chrome/124.0.0.0"
@@ -29,6 +33,7 @@ class Scraper:
         # chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        driver.implicitly_wait(2)
         return driver
     
     def download_pdf_with_user_agent(self, url, filename):
@@ -38,6 +43,12 @@ class Scraper:
         with urllib.request.urlopen(request) as response, open(file_path, 'wb') as f:
             f.write(response.read())
     
+    def download_page_as_html(self, html_content, filename):
+        file_path = os.path.join(self.DOWNLOAD_FOLDER, filename)
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(html_content)
+        return file_path
+
     def write_csv(self, data):
         with open(self.CSV_FILE_NAME, 'w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=['title', 'url', 'date'])
@@ -67,3 +78,12 @@ class Scraper:
             full_text += page.get_text(type)
         document.close()
         return full_text
+    
+    @classmethod
+    def convert_to_date_type(cls, date_str, format_str):
+        return datetime.strptime(date_str, format_str)
+    
+class ScraperType(Enum):
+    PDF = 1
+    HTML = 2
+    URL = 3
