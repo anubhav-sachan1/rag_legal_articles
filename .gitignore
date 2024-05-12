@@ -1,0 +1,5 @@
+*.pdf
+
+# Ignore all vscode files
+.vscode/*
+.DS_Store
