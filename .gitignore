@@ -5,5 +5,5 @@
 .DS_Store
 
 
-# Ignore pycache
-__pycache__/*
+# Ignore pycache in all directories
+**/__pycache__/*

@@ -6,9 +6,10 @@ import urllib.request
 from urllib.parse import urlparse
 import csv
 import os
+import fitz
 
 class Scraper:
-    DOWNLOAD_FOLDER_NAME = 'files'
+    PDF_FOLDER_NAME = 'files'
     CSV_FILE_NAME = 'publications.csv'
 
     def __init__(self, base_url):
@@ -18,9 +19,16 @@ class Scraper:
         self.data = []
     
     def init_driver(self):
+        user_agent = "Chrome/124.0.0.0"
         chrome_options = Options()
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_experimental_option('useAutomationExtension', False)
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_argument(f"user-agent={user_agent}")
         # chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         return driver
     
     def download_pdf_with_user_agent(self, url, filename):
@@ -39,7 +47,7 @@ class Scraper:
     def prepare_output(self):
         parsed_uri = urlparse(self.base_url)
         root_folder_name = parsed_uri.netloc
-        download_folder = os.path.join(root_folder_name, self.DOWNLOAD_FOLDER_NAME)
+        download_folder = os.path.join(root_folder_name, self.PDF_FOLDER_NAME)
         csv_file = os.path.join(root_folder_name, self.CSV_FILE_NAME)
         os.makedirs(download_folder, exist_ok=True)
         self.DOWNLOAD_FOLDER = download_folder
@@ -52,3 +60,10 @@ class Scraper:
     def close(self):
         self.driver.quit()
 
+    def extract_text_from_pdf(pdf_path, type='text'):
+        document = fitz.open(pdf_path)
+        full_text = ""
+        for page in document:
+            full_text += page.get_text(type)
+        document.close()
+        return full_text
