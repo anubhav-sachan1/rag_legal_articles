@@ -32,7 +32,7 @@ class SimpsonThacherScraper(Scraper):
                 link = element.find_element(By.CSS_SELECTOR, "a.anchor-when-reading_News")
                 title = link.text
                 doc_date = element.find_element(By.CSS_SELECTOR, "span.sfnewsMetaDate").text
-                doc_date = self.convert_to_date_type(doc_date, '%m.%d.%y').date()
+                doc_date = self.convert_to_date_type(doc_date, '%d.%m.%y').date()
                 link.click()
                 time.sleep(2)
                 html_element = self.driver.find_element(By.CSS_SELECTOR, "div[id^='cph_main'] div.show-when-reading-inner")
