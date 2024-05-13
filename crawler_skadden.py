@@ -5,7 +5,6 @@ import requests
 from bs4 import BeautifulSoup
 from chunk_text import chunk_text
 import csv
-import json
 from datetime import datetime
 
 def scrape_articles():
@@ -87,9 +86,8 @@ def fetch_and_clean_content(url):
     
     text = ' '.join(article_content.stripped_strings)
 
-    clean_text = text.encode('ascii', errors='ignore').decode('ascii')
-    chunks = chunk_text(clean_text)
-    return chunks
+    clean_text = text.encode('utf-8', errors='ignore').decode('utf-8')
+    return clean_text
 
 def write_articles_to_csv(articles):
     with open("skadden_chunks.csv", mode="w", newline='', encoding='utf-8') as f:
@@ -97,7 +95,8 @@ def write_articles_to_csv(articles):
         writer.writerow(['Firm', 'Publication Title', 'Chunk Text'])
         
         for article in articles:
-            content_chunks = fetch_and_clean_content(article["link"])
+            clean_text = fetch_and_clean_content(article["link"])
+            content_chunks = chunk_text(clean_text)
             title = article["title"]
             firm = "Skadden" 
             
