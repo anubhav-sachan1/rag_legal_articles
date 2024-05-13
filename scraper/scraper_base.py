@@ -1,4 +1,5 @@
 from selenium import webdriver
+import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -23,16 +24,16 @@ class Scraper:
         self.LAST_DATE = self.convert_to_date_type('31.12.2021', '%d.%m.%Y').date()
     
     def init_driver(self):
-        user_agent = "Chrome/124.0.0.0"
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
         chrome_options = Options()
-        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-        chrome_options.add_argument("--disable-extensions")
-        chrome_options.add_experimental_option('useAutomationExtension', False)
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        chrome_options.add_argument(f"user-agent={user_agent}")
+        # chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        # chrome_options.add_argument("--disable-extensions")
+        # chrome_options.add_experimental_option('useAutomationExtension', False)
+        # chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        # chrome_options.add_argument(f"user-agent={user_agent}")
         # chrome_options.add_argument("--headless")
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
-        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        driver = uc.Chrome(options=chrome_options)
+        # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         driver.implicitly_wait(2)
         return driver
     
