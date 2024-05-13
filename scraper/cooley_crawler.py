@@ -31,6 +31,7 @@ class CooleyScraper(Scraper):
             link = element.find_element(By.CSS_SELECTOR, "a.teaser-title.h3")
             title = link.find_element(By.CSS_SELECTOR, "span.CoveoFieldValue").text
             doc_date = element.find_element(By.CSS_SELECTOR, "div.teaser-date").text
+            doc_date = self.convert_to_date_type(doc_date, '%B %d, %Y')
             # self.driver.switch_to.window(self.driver.window_handles[-1]) 
             # Get the URL of the new tab
             doc_url = link.get_attribute('href')
