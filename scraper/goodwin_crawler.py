@@ -5,11 +5,20 @@ from datetime import datetime
 
 from scraper_base import Scraper, ScraperType
 
-class GleisSlutzScraper(Scraper):
+class GoodwinScraper(Scraper):
+    @staticmethod
+    def contains_date(string, date_format="%B %d, %Y"):
+        try:
+            # Try to parse the string into a datetime object according to the specified format
+            datetime.strptime(string, date_format)
+            return True
+        except ValueError:
+            # If ValueError is raised, it means the string does not match the date format
+            return False
 
     def accept_cookies(self):
         try:
-            cookie_button = self.driver.find_element(By.CSS_SELECTOR, '#ccm-widget button.ccm--save-settings')
+            cookie_button = self.driver.find_element(By.CSS_SELECTOR, 'button#onetrust-accept-btn-handler')
             # If button exists, click it
             if cookie_button:
                 cookie_button.click()
@@ -17,20 +26,22 @@ class GleisSlutzScraper(Scraper):
             print(f"Error: {e}")
             print("Failed to accept cookies")
 
-    def fetch_data(self):
-        url = self.base_url
+    def fetch_data(self, page_number):
+        url = f'{self.base_url}&page={page_number}'
         self.driver.get(url)
         time.sleep(2)
         self.accept_cookies()
 
-        elements = self.driver.find_elements(By.CSS_SELECTOR, "div.js-content-container-all article.node--type-knowhow")
+        elements = self.driver.find_elements(By.CSS_SELECTOR, "div[class^='InsightsInsightSearch_panels__Wirv0'] ul li")
         last_date = datetime.today().date()
         
         for element in elements:
-            link = element.find_element(By.CSS_SELECTOR, 'a.teaser__more-link')
-            title = element.find_element(By.CSS_SELECTOR, "span.teaser__headline").text
-            doc_date = element.find_element(By.CSS_SELECTOR, "time").text
-            doc_date = self.convert_to_date_type(doc_date, '%d.%m.%Y').date()
+            link = element.find_element(By.CSS_SELECTOR, 'a')
+            title = element.find_element(By.CSS_SELECTOR, "h3.type__h5").text
+            span_elements = element.find_elements(By.CSS_SELECTOR, "span[class^='SearchArticleResult_articleMeta']")
+            date_format="%B %d, %Y"
+            doc_date = [s.text for s in span_elements if self.contains_date(s.text,date_format)][0]
+            doc_date = self.convert_to_date_type(doc_date, date_format).date()
             if doc_date < last_date:
                 last_date = doc_date
             doc_url = link.get_attribute('href')
@@ -51,9 +62,9 @@ class GleisSlutzScraper(Scraper):
         for entry in self.data:
             try:
                 self.driver.get(entry['url'])
-                html_element = self.driver.find_element(By.CSS_SELECTOR, "div.paragraph__content-container")
+                html_element = self.driver.find_element(By.CSS_SELECTOR, "main div.rich-text")
                 html_content = html_element.get_attribute('outerHTML')
-                file_path = self.download_page_as_html(html_content, f"{entry['title']}.html")
+                self.download_page_as_html(html_content, f"{entry['title']}.html")
                 csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
             except Exception:
@@ -62,9 +73,10 @@ class GleisSlutzScraper(Scraper):
         self.write_csv(csv_data)
 
 def main():
-    base_url = 'https://www.gleisslutz.com/en/news-events/know-how'
-    scraper = GleisSlutzScraper(base_url)
-    scraper.fetch_data()
+    base_url = 'https://www.goodwinlaw.com/en/insights?getrecent=true'
+    scraper = GoodwinScraper(base_url)
+    page_number = 10
+    scraper.fetch_data(page_number)
     scraper.download_html_and_save_csv()
     scraper.close()
 

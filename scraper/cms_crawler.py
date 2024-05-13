@@ -54,7 +54,7 @@ class CmsScraper(Scraper):
                 html_element = self.driver.find_element(By.CSS_SELECTOR, "div.block_rich_publication_text_block")
                 html_content = html_element.get_attribute('outerHTML')
                 file_path = self.download_page_as_html(html_content, f"{entry['title']}.html")
-                csv_row = {'title': entry['title'], 'url': file_path, 'date': entry['date']}
+                csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
             except Exception:
                 print(f"Failed to retrieve PDF URL for {entry['title']}")
