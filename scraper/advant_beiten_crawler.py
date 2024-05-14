@@ -80,6 +80,7 @@ def main():
     scraper = AdvantBeitanScraper(base_url)
     scraper.fetch_data()
     scraper.download_html_and_save_csv()
+    scraper.write_chunks_csv("ADVANT Beiten","div","text g-m--up-6 u-padbot--1 blog__text--full text")
     scraper.close()
 
 if __name__ == "__main__":

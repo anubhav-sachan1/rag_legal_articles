@@ -1,24 +1,60 @@
+import os
 import pandas as pd
 import ast
 import numpy as np
 import faiss
 import pickle
 
-# Load the CSV
-df = pd.read_csv('skadden_chunk_embedding.csv')
-df['Embedding'] = df['Embedding'].apply(ast.literal_eval)
+class EmbeddingsIndexer:
+    def __init__(self, directories, nlist):
+        self.directories = directories
+        self.nlist = nlist  
+        self.combined_df = None
 
-# Convert embeddings to a suitable numpy array
-embeddings = np.array(df['Embedding'].tolist()).astype('float32')
+    def load_and_combine_csvs(self):
+        dataframes = []
+        for directory in self.directories:
+            csv_path = os.path.join(directory, 'chunk_embedding.csv')
+            if os.path.exists(csv_path):
+                df = pd.read_csv(csv_path)
+                df['Embedding'] = df['Embedding'].apply(ast.literal_eval)
+                dataframes.append(df)
+            else:
+                print(f"No CSV found in {directory}")
+        if dataframes:
+            self.combined_df = pd.concat(dataframes, ignore_index=True)
 
-# Create and populate FAISS index
-dim = embeddings.shape[1]
-index = faiss.IndexFlatL2(dim)
-index.add(embeddings)
+    def create_faiss_index(self):
+        if self.combined_df is not None:
+            embeddings = np.array(self.combined_df['Embedding'].tolist()).astype('float32')
+            dim = embeddings.shape[1]
+            
+            quantizer = faiss.IndexFlatL2(dim)  
+            index = faiss.IndexIVFFlat(quantizer, dim, self.nlist, faiss.METRIC_L2)
+            
+            assert not index.is_trained
+            index.train(embeddings)  
+            assert index.is_trained
 
-# Save the index
-faiss.write_index(index, "embeddings_index.faiss")
+            index.add(embeddings)  
+            faiss.write_index(index, "embeddings_index_ivfflat.faiss")
 
-# Save the mapping from index to chunk text
-with open("index_to_text.pkl", "wb") as f:
-    pickle.dump(df['Chunk Text'].to_dict(), f)
+    def save_text_mapping(self):
+        if self.combined_df is not None:
+            with open("index_to_text.pkl", "wb") as f:
+                pickle.dump(self.combined_df['Chunk Text'].to_dict(), f)
+
+    def process(self):
+        self.load_and_combine_csvs()
+        self.create_faiss_index()
+        self.save_text_mapping()
+
+def main():
+    directories = ["scraper/www.advant-beiten.com", "scraper/www.skadden.com"]
+    nlist = 20  
+    indexer = EmbeddingsIndexer(directories, nlist)
+    indexer.process()
+    print("IVF Flat Embedding indexing and mapping saved successfully.")
+
+if __name__ == "__main__":
+    main()
