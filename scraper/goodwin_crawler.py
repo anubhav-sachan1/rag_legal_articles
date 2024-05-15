@@ -80,7 +80,7 @@ class GoodwinScraper(Scraper):
                 csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
             except Exception:
-                print(f"Failed to retrieve PDF URL for {entry['title']}")
+                pass
         
         self.write_csv(csv_data)
 
@@ -90,6 +90,7 @@ def main():
     page_number = 378
     scraper.fetch_data(page_number)
     scraper.download_html_and_save_csv()
+    scraper.write_chunks_csv("Goodwin","div","rich-text")
     scraper.close()
 
 if __name__ == "__main__":

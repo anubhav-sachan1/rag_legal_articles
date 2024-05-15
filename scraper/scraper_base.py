@@ -29,7 +29,7 @@ class Scraper:
         self.set_last_date(last_date_str, date_format)
     
     def init_driver(self):
-        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Safari/537.36"
         chrome_options = Options()
         # chrome_options.add_argument('--disable-blink-features=AutomationControlled')
         # chrome_options.add_argument("--disable-extensions")

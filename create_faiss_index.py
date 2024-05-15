@@ -50,8 +50,8 @@ class EmbeddingsIndexer:
         self.save_text_mapping()
 
 def main():
-    directories = ["scraper/www.advant-beiten.com", "scraper/www.skadden.com"]
-    nlist = 20  
+    directories = ["scraper/www.advant-beiten.com", "scraper/www.skadden.com", "scraper/www.goodwinlaw.com"]
+    nlist = 50  
     indexer = EmbeddingsIndexer(directories, nlist)
     indexer.process()
     print("IVF Flat Embedding indexing and mapping saved successfully.")
