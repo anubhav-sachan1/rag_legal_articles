@@ -56,7 +56,9 @@ def main():
         "scraper/www.goodwinlaw.com",
         "scraper/www.noerr.com",
         "scraper/www.debevoise.com",
-        "scraper/www.cooley.com"
+        "scraper/www.cooley.com",
+        "scraper/www.lw.com",
+        "scraper/www.gleisslutz.com"
         ]
     nlist = 50  
     indexer = EmbeddingsIndexer(directories, nlist)

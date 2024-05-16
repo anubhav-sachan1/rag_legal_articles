@@ -1,6 +1,8 @@
 import os
 import time
+from datetime import datetime
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 
 from scraper_base import Scraper
 
@@ -16,61 +18,92 @@ class LathamWatkinsScraper(Scraper):
             print("Failed to accept cookies")
 
     def fetch_data(self):
-        url = self.base_url
-        self.driver.get(url)
+        homepage_url = 'https://www.lw.com'
+        self.driver.get(homepage_url)
         time.sleep(5)
         self.accept_cookies()
 
-        
-        elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.coveo-list-layout')
-        original_window = self.driver.current_window_handle
-        for idx in range(1, len(elements)):
-            element = elements[idx]
-            title = element.find_element(By.CSS_SELECTOR, "h3.content-card__title span.CoveoFieldValue span").text
-            link = element.find_element(By.CSS_SELECTOR, "a.content-card__link")
-            doc_date = element.find_element(By.CSS_SELECTOR, "div.content-card__info span span").text
-            link.click()
-            self.driver.switch_to.window(self.driver.window_handles[-1]) 
-            doc_url = self.driver.current_url
-            if '.pdf' in doc_url:
-                self.driver.close()
-                self.driver.switch_to.window(original_window)
-                self.data.append({
-                    'title': title,
-                    'date': doc_date,
-                    'url': doc_url,
-                    'contains_pdf': '.pdf' in doc_url
-                })
-            else:
-                self.driver.back()
-                elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.coveo-list-layout')
-                time.sleep(2)
+        first = 0
+        last_date = datetime.today().date()
+        last_date_threshold = datetime.strptime('1 May 2024', '%d %B %Y').date()
 
-    def download_pdfs_and_prepare_csv(self):
+        while last_date > last_date_threshold:
+            url = f'{self.base_url}#first={first}&sort=%40newsandinsightsdate%20descending&f:@newsandinsightstypefacet=[Publication]'
+            self.driver.get(url)
+            time.sleep(5)
+
+            elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.coveo-list-layout')
+            if not elements:
+                break
+
+            original_window = self.driver.current_window_handle
+            idx = 0
+            while idx < len(elements):
+                try:
+                    time.sleep(2)
+                    element = elements[idx]
+                    title = element.find_element(By.CSS_SELECTOR, "h3.content-card__title span.CoveoFieldValue span").text
+                    link = element.find_element(By.CSS_SELECTOR, "a.content-card__link")
+                    doc_date = element.find_element(By.CSS_SELECTOR, "div.content-card__info span span").text
+                    doc_date = datetime.strptime(doc_date, '%B %d, %Y').date()
+                    if doc_date < last_date_threshold:
+                        last_date = doc_date
+                        break
+                    link.click()
+                    time.sleep(3)
+                    if len(self.driver.window_handles) > 1:
+                        self.driver.switch_to.window(self.driver.window_handles[-1])
+                    doc_url = self.driver.current_url
+                    contains_pdf = '.pdf' in doc_url
+                    self.data.append({
+                        'title': title,
+                        'date': doc_date,
+                        'url': doc_url,
+                        'contains_pdf': contains_pdf
+                    })
+                    if contains_pdf or self.driver.current_window_handle != original_window:
+                        self.driver.close()
+                        self.driver.switch_to.window(original_window)
+                    else:
+                        self.driver.back()
+                        time.sleep(2)
+                    idx += 1
+                except StaleElementReferenceException:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.coveo-list-layout')[idx:]
+                    continue
+                except NoSuchElementException:
+                    print(f"Element not found, skipping index {idx}")
+                    idx += 1
+
+            if last_date >= last_date_threshold:
+                first += 20
+
+    def download_content_and_prepare_csv(self):
         csv_data = []
         for entry in self.data:
+            file_extension = 'pdf' if entry['contains_pdf'] else 'html'
+            file_path = f"{entry['title'].replace('/', '_')}.{file_extension}"
             try:
-                if not entry['contains_pdf']:
-                    continue
-                pdf_url = entry['url']
-                csv_row = {'title': entry['title'], 'url': pdf_url, 'date': entry['date']}
-                self.download_pdf_with_user_agent(pdf_url, f"{entry['title']}.pdf")
+                if entry['contains_pdf']:
+                    self.download_pdf_with_user_agent(entry['url'], file_path)
+                else:
+                    self.driver.get(entry['url'])
+                    html_content = self.driver.page_source
+                    self.download_page_as_html(html_content, file_path)
+                csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
             except Exception:
-                print(f"Failed to retrieve PDF URL for {entry['title']}")
-        
+                print(f"Failed to retrieve content for {entry['title']}")
+
         self.write_csv(csv_data)
 
 def main():
-    base_url = 'https://www.lw.com/en/insights-listing#sort=%40newsandinsightsdate%20descending&f:@newsandinsightstypefacet=[Publication]'
+    base_url = 'https://www.lw.com/en/insights-listing'
     scraper = LathamWatkinsScraper(base_url)
-    try:
-        scraper.fetch_data()
-        scraper.download_pdfs_and_prepare_csv()
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        scraper.close()
+    scraper.fetch_data()
+    scraper.download_content_and_prepare_csv()
+    scraper.write_chunks_csv("Latham & Watkins", "div", "component-content", True)
+    scraper.close()
 
 if __name__ == "__main__":
     main()
