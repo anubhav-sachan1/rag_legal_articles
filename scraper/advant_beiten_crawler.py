@@ -47,7 +47,7 @@ class AdvantBeitanScraper(Scraper):
         return last_date
 
     def fetch_data(self):
-        page_number = 1
+        page_number = 0
         last_date = datetime.today().date()
         while True:
             url = f'{self.base_url}?page={page_number}'

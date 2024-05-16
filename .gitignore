@@ -1,5 +1,7 @@
 *.pdf
 *.html
+*.faiss
+*.csv
 
 # Ignore all vscode files
 .vscode/*

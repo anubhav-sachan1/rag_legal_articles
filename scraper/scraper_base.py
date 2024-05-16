@@ -14,6 +14,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from chunk_text import chunk_text
+import re
 
 class Scraper:
     PDF_FOLDER_NAME = 'files'
@@ -71,22 +72,52 @@ class Scraper:
             writer.writeheader()
             writer.writerows(data)
     
-    def write_chunks_csv(self, firm_name, container_element, class_name):
+    def write_chunks_csv(self, firm_name, container_element, class_name, read_files=False):
         parsed_uri = urlparse(self.base_url)
         root_folder_name = parsed_uri.netloc
         chunks_file = os.path.join(root_folder_name, self.CHUNKS_FILE_NAME)
-        self.CHUNKS_FILE_NAME = chunks_file
-        with open(self.CHUNKS_FILE_NAME, mode="w", newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=['Firm', 'Publication Title', 'Chunk Text'])
+        files_dir = os.path.join(root_folder_name, self.PDF_FOLDER_NAME)
+
+        with open(chunks_file, mode="w", newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=['Firm', 'Publication Title', 'Chunk Text'], escapechar='\\', quoting=csv.QUOTE_MINIMAL)
             writer.writeheader()
-            df = pd.read_csv(self.CSV_FILE_NAME)
-            with open(self.CHUNKS_FILE_NAME, mode="w", newline='', encoding='utf-8') as file:
-                writer = csv.DictWriter(file, fieldnames=['Firm', 'Publication Title', 'Chunk Text'])
-                writer.writeheader()
-                for _, row in df.iterrows():
-                    content_chunks = self.extract_text_from_html(row["url"],container_element,class_name)
+
+            if read_files:
+                for filename in os.listdir(files_dir):
+                    file_path = os.path.join(files_dir, filename)
+                    if filename.endswith('.pdf'):
+                        text = self.extract_text_from_pdf(file_path)
+                    elif filename.endswith('.html'):
+                        text = self.extract_text_from_html_file(file_path, container_element, class_name)
+                    else:
+                        continue
+                    if text=="Failed to read PDF." or text=="No content found.":
+                        continue
+                    content_chunks = chunk_text(text)
+                    title = os.path.splitext(filename)[0]  
                     for chunk in content_chunks:
-                        writer.writerow({'Firm': firm_name, 'Publication Title': row["title"], 'Chunk Text': chunk})
+                        try:
+                            writer.writerow({'Firm': firm_name, 'Publication Title': title, 'Chunk Text': chunk})
+                        except Exception as e:
+                            print(f"Error writing row for {title}: {e}")
+            else:
+                df = pd.read_csv(self.CSV_FILE_NAME)
+                for _, row in df.iterrows():
+                    content_chunks = self.extract_text_from_html(row["url"], container_element, class_name)
+                    for chunk in content_chunks:
+                        try:
+                            writer.writerow({'Firm': firm_name, 'Publication Title': row["title"], 'Chunk Text': chunk})
+                        except Exception as e:
+                            print(f"Error writing row for {row['title']}: {e}")
+
+    def extract_text_from_html_file(self, file_path, container_element, class_name):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            html_content = file.read()
+        soup = BeautifulSoup(html_content, 'html.parser')
+        article_content = soup.find(container_element, class_=class_name)
+        if article_content:
+            return ' '.join(article_content.stripped_strings)
+        return "No content found."
     
     def prepare_output(self):
         parsed_uri = urlparse(self.base_url)
@@ -116,17 +147,25 @@ class Scraper:
         if not article_content:
             return "No article content found."
         text = ' '.join(article_content.stripped_strings)
-        clean_text = text.encode('utf-8', errors='ignore').decode('utf-8')
+        clean_text = text.encode('ascii', errors='ignore').decode('ascii')
         chunks = chunk_text(clean_text)
         return chunks
 
-    def extract_text_from_pdf(pdf_path, type='text'):
-        document = fitz.open(pdf_path)
-        full_text = ""
-        for page in document:
-            full_text += page.get_text(type)
-        document.close()
-        return full_text
+    def extract_text_from_pdf(self,pdf_path):
+        try:
+            doc = fitz.open(pdf_path)
+            text = ""
+            for page in doc:
+                text += page.get_text()
+            doc.close()
+            
+            clean_text = text.replace('\n', ' ').replace('\t', ' ')  
+            clean_text = re.sub(r'[ ]{2,}', ' ', clean_text)  
+            clean_text = clean_text.encode('ascii', errors='ignore').decode('ascii')
+            
+            return clean_text
+        except Exception as e:
+            return "Failed to read PDF."
     
     @classmethod
     def convert_to_date_type(cls, date_str, format_str):
