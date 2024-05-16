@@ -57,10 +57,13 @@ class Scraper:
             f.write(response.read())
     
     def download_page_as_html(self, html_content, filename):
-        file_path = os.path.join(self.DOWNLOAD_FOLDER, filename)
-        with open(file_path, 'w', encoding='utf-8') as file:
-            file.write(html_content)
-        return file_path
+        try:
+            file_path = os.path.join(self.DOWNLOAD_FOLDER, filename)
+            with open(file_path, 'w', encoding='utf-8') as file:
+                file.write(html_content)
+            return file_path
+        except:
+            return ""
 
     def write_csv(self, data):
         with open(self.CSV_FILE_NAME, 'w', newline='') as file:

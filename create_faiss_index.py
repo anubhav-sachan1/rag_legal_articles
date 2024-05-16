@@ -50,7 +50,12 @@ class EmbeddingsIndexer:
         self.save_text_mapping()
 
 def main():
-    directories = ["scraper/www.advant-beiten.com", "scraper/www.skadden.com", "scraper/www.goodwinlaw.com"]
+    directories = [
+        "scraper/www.advant-beiten.com", 
+        "scraper/www.skadden.com", 
+        "scraper/www.goodwinlaw.com",
+        "scraper/www.noerr.com"
+        ]
     nlist = 50  
     indexer = EmbeddingsIndexer(directories, nlist)
     indexer.process()

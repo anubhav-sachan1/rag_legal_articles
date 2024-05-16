@@ -48,7 +48,12 @@ class EmbeddingsGenerator:
         self.save_embeddings(text_batches, embeddings)
 
 def main():
-    directories = ["scraper/www.advant-beiten.com", "scraper/www.skadden.com", "scraper/www.goodwinlaw.com"]
+    directories = [
+        "scraper/www.advant-beiten.com", 
+        "scraper/www.skadden.com", 
+        "scraper/www.goodwinlaw.com",
+        "scraper/www.noerr.com"
+        ]
     api_key_path = 'secret_key.txt'
     with open(api_key_path, 'r') as f:
         api_key = f.readline().strip()
