@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import requests
 import csv
+import numpy as np
 
 class EmbeddingsGenerator:
     def __init__(self, directory, api_key):
@@ -24,14 +25,33 @@ class EmbeddingsGenerator:
             total_batches.append(batch['Chunk Text'].tolist())
         return total_batches
 
+    import numpy as np
+
     def get_embeddings(self, text_batches):
         embeddings = []
         for batch in text_batches:
-            response = requests.post(self.url, headers=self.headers, json={"input": batch, "model": "text-embedding-3-small"})
-            for embeddingJSON in response.json()['data']:
-                embedding = embeddingJSON["embedding"]
-                embeddings.append(embedding)
+            # Clean each text in the batch individually
+            clean_batch = []
+            for text in batch:
+                if isinstance(text, str):
+                    clean_batch.append(text)
+                elif isinstance(text, float) and (np.isnan(text) or np.isinf(text)):
+                    clean_batch.append("invalid data")  # Replace problematic floats
+                else:
+                    clean_batch.append(str(text))  # Ensure everything is a string
+
+            try:
+                response = requests.post(self.url, headers=self.headers, json={"input": clean_batch, "model": "text-embedding-3-small"})
+                response.raise_for_status()  # This will raise an exception for HTTP error responses
+                for embeddingJSON in response.json()['data']:
+                    embedding = embeddingJSON["embedding"]
+                    embeddings.append(embedding)
+            except requests.exceptions.RequestException as e:
+                print(f"Request failed: {e}")
+                # Optionally, handle specific response errors here
+                continue  # Skip this batch on failure but continue processing
         return embeddings
+
 
     def save_embeddings(self, text_batches, embeddings):
         chunks = [chunk for batch in text_batches for chunk in batch]
@@ -57,7 +77,10 @@ def main():
         "scraper/www.cooley.com",
         "scraper/www.lw.com",
         "scraper/www.gleisslutz.com",
-        "scraper/www/sidley.com"
+        "scraper/www.sidley.com",
+        "scraper/www.stblaw.com",
+        "scraper/cms.law",
+        "scraper/hengeler-news.com"
         ]
     api_key_path = 'secret_key.txt'
     with open(api_key_path, 'r') as f:

@@ -59,9 +59,12 @@ def main():
         "scraper/www.cooley.com",
         "scraper/www.lw.com",
         "scraper/www.gleisslutz.com",
-        "scraper/www/sidley.com"
+        "scraper/www.sidley.com",
+        "scraper/www.stblaw.com",
+        "scraper/cms.law",
+        "scraper/hengeler-news.com"
         ]
-    nlist = 50  
+    nlist = 200  
     indexer = EmbeddingsIndexer(directories, nlist)
     indexer.process()
     print("IVF Flat Embedding indexing and mapping saved successfully.")
