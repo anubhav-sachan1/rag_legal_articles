@@ -25,7 +25,7 @@ class SimpsonThacherScraper(Scraper):
         self.accept_cookies()
 
         continue_loading = True
-        target_date = datetime.strptime('05.01.2024', '%m.%d.%Y').date()
+        target_date = datetime.strptime('12.31.2021', '%m.%d.%Y').date()
 
         while continue_loading:
             elements = self.driver.find_elements(By.CSS_SELECTOR, 'ul.news-list-items li')

@@ -25,7 +25,7 @@ class LathamWatkinsScraper(Scraper):
 
         first = 0
         last_date = datetime.today().date()
-        last_date_threshold = datetime.strptime('1 May 2024', '%d %B %Y').date()
+        last_date_threshold = datetime.strptime('31 December 2021', '%d %B %Y').date()
 
         while last_date > last_date_threshold:
             url = f'{self.base_url}#first={first}&sort=%40newsandinsightsdate%20descending&f:@newsandinsightstypefacet=[Publication]'
