@@ -78,7 +78,7 @@ class SidleyScraper(Scraper):
                     csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
             except Exception as e:
-                print(f"Failed to retrieve content for {entry['title']}")
+                pass
         
         self.write_csv(csv_data)
 
