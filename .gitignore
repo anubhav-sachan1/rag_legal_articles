@@ -62,11 +62,10 @@ coverage.xml
 # Large binary files
 *.faiss
 index_to_text.pkl
-chunk_embedding.csv  # Added this line
+chunk_embedding.csv
 index_to_text.pkl
 
 # Directories that can contain secrets/credentials
-scraper/
 secret_key.txt
 
 # Scraped data directory
