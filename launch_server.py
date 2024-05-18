@@ -6,7 +6,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load the index and mapping
-index = faiss.read_index("embeddings_index.faiss")
+index = faiss.read_index("embeddings_index_ivfflat.faiss")
 with open("index_to_text.pkl", "rb") as f:
     index_to_text = pickle.load(f)
 

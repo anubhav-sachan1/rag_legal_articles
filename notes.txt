@@ -13,5 +13,13 @@ Hengeler Mueller	https://hengeler-news.com/en/latest-articles
 Gleiss Lutz	https://www.gleisslutz.com/en/news-events/know-how
 Noerr	https://www.noerr.com/en/insights?i-fc-type=News
 
+1. Finish Linklaters
+2. Clean up Skadden to resemble others
+3. Unify all crawlers
+4. Create a mutlithreading script to run all crawlers
+5. Add multithreading in the embedding script
+6. Add command line argument or config file to specify directories which have to be embedded/indexed
+7. Create README
+8. Create ZIPs and submit
 
 
