@@ -1,0 +1,11 @@
+pip install selenium
+pip install undetected_chromedriver
+pip install webdriver_manager
+Pip install pymupdf
+Pip install pandas
+pip install beuatifulsoup4
+Pip install langchain
+conda install -c pytorch faiss-cpu=1.8.0
+pip install flask
+pip install space
+python -m spacy download en_core_web_sm
