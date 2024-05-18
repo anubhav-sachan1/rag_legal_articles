@@ -15,11 +15,13 @@ Noerr	https://www.noerr.com/en/insights?i-fc-type=News
 
 1. Finish Linklaters
 2. Clean up Skadden to resemble others
-3. Unify all crawlers
-4. Create a mutlithreading script to run all crawlers
-5. Add multithreading in the embedding script
-6. Add command line argument or config file to specify directories which have to be embedded/indexed
-7. Create README
-8. Create ZIPs and submit
+3. Create a file for handling dependencies and creating a new Conda environment
+4. Unify all crawlers
+5. Create a mutlithreading script to run all crawlers
+6. Add multithreading in the embedding script
+7. Add command line argument or config file to specify directories which have to be embedded/indexed
+8. Maybe add headless mode for scraping?
+9. Create README
+10. Create ZIPs and submit
 
 
