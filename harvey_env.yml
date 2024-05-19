@@ -1,0 +1,19 @@
+name: harvey_env  
+channels:
+  - defaults
+  - pytorch
+dependencies:
+  - python=3.10
+  - faiss-cpu=1.8.0
+  - pip:
+    - webdriver-manager
+    - undetected-chromedriver
+    - pymupdf
+    - langchain
+    - spacy-lookups-data
+    - selenium
+    - pandas
+    - beautifulsoup4 
+    - flask
+    - spacy
+    - en-core-web-sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.6.0/en_core_web_sm-3.6.0.tar.gz#egg=en_core_web_sm
