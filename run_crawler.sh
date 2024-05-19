@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG="crawler_config.json"
+CONFIG="configs/crawler_config.json"
 
 while getopts ":c:" opt; do
   case $opt in
@@ -10,5 +10,4 @@ while getopts ":c:" opt; do
   esac
 done
 
-cd scraper
-python run_crawlers.py --config $CONFIG
+python scraper/run_crawlers.py --config $CONFIG

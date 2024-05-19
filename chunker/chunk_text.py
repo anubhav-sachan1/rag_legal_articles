@@ -129,7 +129,3 @@ if __name__ == "__main__":
 
     with ThreadPoolExecutor(max_workers=threads) as executor:
         executor.map(process_chunker, configurations)
-
-# if __name__ == "__main__":
-#     chunker = Chunker("scraper/www.gleisslutz.com","Gleiss Lutz", "div", "paragraph__content-container")
-#     chunker.write_chunks_csv()

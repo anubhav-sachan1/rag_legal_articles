@@ -61,7 +61,8 @@ class Scraper:
     
     def prepare_output(self):
         parsed_uri = urlparse(self.base_url)
-        root_folder_name = parsed_uri.netloc
+        root_folder_base_name = "scraper"
+        root_folder_name = os.path.join(root_folder_base_name,parsed_uri.netloc)
         download_folder = os.path.join(root_folder_name, self.HTML_PDF_FOLDER_NAME)
         csv_file = os.path.join(root_folder_name, self.CSV_FILE_NAME)
         os.makedirs(download_folder, exist_ok=True)

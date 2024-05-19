@@ -1,7 +1,7 @@
 #!/bin/bash
 
 THREADS=4
-CONFIG_FILE="chunker_config.json"
+CONFIG_FILE="configs/chunker_config.json"
 
 while getopts t:c: flag
 do
