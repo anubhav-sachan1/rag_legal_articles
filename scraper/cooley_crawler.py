@@ -7,8 +7,8 @@ from scraper_base import Scraper, ScraperType
 
 class CooleyScraper(Scraper):
 
-    def __init__(self, base_url, last_date_str='31.12.2021', date_format='%d.%m.%Y'):
-        super().__init__(base_url, last_date_str, date_format)
+    def __init__(self, base_url, last_date_str='31.12.2021', date_formats=['%d.%m.%Y']):
+        super().__init__(base_url, last_date_str, date_formats)
         self.cookies_accepted = False  
 
     def accept_cookies(self):
@@ -78,7 +78,7 @@ class CooleyScraper(Scraper):
 
 def main():
     base_url = 'https://www.cooley.com/news/search-media#first={}&sort=%40sortdatecoveo%20descending&f:cooley-coveo-facet-sections=[Insight]'
-    scraper = CooleyScraper(base_url, last_date_str='31.12.2021', date_format='%d.%m.%Y')
+    scraper = CooleyScraper(base_url, last_date_str='31.12.2021', date_formats=['%d.%m.%Y'])
     
     scraper.fetch_data()
     scraper.download_html_and_save_csv()

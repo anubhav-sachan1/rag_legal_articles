@@ -30,7 +30,6 @@ class LinklatersScraper(Scraper):
             print("Cookie button not found or not clickable.")
 
     def load_all_articles(self):
-        """Load all articles up to the target date using the 'Load More' button."""
         self.driver.get(self.base_url)
         time.sleep(2)
         self.accept_cookies()
@@ -56,7 +55,6 @@ class LinklatersScraper(Scraper):
                 break
 
     def fetch_data(self):
-        """Fetch data from all loaded articles."""
         elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.searchResults.cardRow div.result-item.card')
         for element in elements:
             link = element.find_element(By.CSS_SELECTOR, "div.card__box h4.card__title a")
@@ -80,17 +78,11 @@ class LinklatersScraper(Scraper):
             return False
 
     def download_pdfs_and_prepare_csv(self):
-        """Download PDFs and prepare CSV from the fetched data."""
         csv_data = []
-        skipped_entries_cnt = 0
-        failed_entries_cnt = 0
-        processed_entries_cnt = 0
         for entry in self.data:
             try:
                 self.driver.get(entry['url'])
                 if self.has_obscured_content():
-                    print(f"Obscured content found for {entry['title']}. Skipping...")
-                    skipped_entries_cnt += 1
                     continue
                 html_element = self.driver.find_element(By.CSS_SELECTOR, "div.containerOuter div.content-block__content")
                 links = html_element.find_elements(By.CSS_SELECTOR, "a")
@@ -106,11 +98,8 @@ class LinklatersScraper(Scraper):
                     self.download_page_as_html(html_content, f"{entry['title']}.html")
                     csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
-                processed_entries_cnt += 1
             except Exception as e:
-                print(f"Failed to retrieve content for {entry['title']}")
-                failed_entries_cnt += 1
-            print("Statistics: {processed_entries_cnt} processed, {skipped_entries_cnt} skipped, {failed_entries_cnt} failed")
+                pass
                     
         self.write_csv(csv_data)
 

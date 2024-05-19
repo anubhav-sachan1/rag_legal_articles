@@ -36,7 +36,7 @@ class CmsScraper(Scraper):
                         EC.element_to_be_clickable((By.CSS_SELECTOR, ".btn.load-more.js-load-more"))
                     )
                     load_more_button.click()
-                    time.sleep(5)  # Wait for more articles to load
+                    time.sleep(5)
             except Exception as e:
                 print("Could not find the 'Load more articles' button or no more pages to load")
                 print(e)

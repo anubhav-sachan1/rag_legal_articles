@@ -42,12 +42,11 @@ class NoerrScraper(Scraper):
                         EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.css-gf569q'))
                     )
                     load_more_button.click()
-                    time.sleep(5)  # Wait for the content to load
+                    time.sleep(5)  
                 except Exception as e:
                     print("No more 'Load More' button found.")
                     continue_loading = False
 
-        # Collect articles only after finishing loading
         for element in elements:
             link = element.find_element(By.CSS_SELECTOR, 'div.teaser-fixed-width h4 a')
             title = link.text

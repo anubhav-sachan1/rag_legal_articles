@@ -12,7 +12,6 @@ class AdvantBeitanScraper(Scraper):
             cookie_button = self.driver.execute_script("""
                 return document.querySelector("#usercentrics-root").shadowRoot.querySelector("#uc-center-container button[data-testid='uc-accept-all-button']")
             """)
-            # If button exists, click it
             if cookie_button:
                 cookie_button.click()
         except Exception as e:

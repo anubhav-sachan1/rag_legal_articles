@@ -15,15 +15,16 @@ class Scraper:
     CSV_FILE_NAME = 'publications.csv'
     LAST_DATE = None
 
-    def __init__(self, base_url, last_date_str='31.12.2021', date_format='%d.%m.%Y'):
+    def __init__(self, base_url, last_date_str='31.12.2021', date_formats=['%d.%m.%Y']):
         self.base_url = base_url
         self.driver = self.init_driver()
         self.prepare_output()
         self.data = []
-        self.set_last_date(last_date_str, date_format)
+        self.date_formats = date_formats
+        self.set_last_date(last_date_str, self.date_formats[0])
     
     def init_driver(self):
-        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.208 Safari/537.36"
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         chrome_options = Options()
         driver = uc.Chrome(options=chrome_options)
         driver.implicitly_wait(2)
@@ -77,6 +78,14 @@ class Scraper:
     @classmethod
     def convert_to_date_type(cls, date_str, format_str):
         return datetime.strptime(date_str, format_str)
+
+    def get_parsed_date(self, date_str) -> datetime.date:
+        for date_format in self.date_formats:
+            try:
+                return self.convert_to_date_type(date_str, date_format).date()
+            except ValueError:
+                continue
+        return None
 
 class ScraperType(Enum):
     PDF = 1
