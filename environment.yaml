@@ -1,0 +1,20 @@
+name: harvey_ai_infra_assignment
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.10
+  - pip
+  - flask
+  - pandas
+  - beautifulsoup4
+  - faiss-cpu=1.8.0
+  - pip:
+    - selenium
+    - undetected_chromedriver
+    - webdriver_manager
+    - pymupdf
+    - langchain
+    - spacy
+
