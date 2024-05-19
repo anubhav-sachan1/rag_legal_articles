@@ -80,7 +80,7 @@ def main():
     base_url = 'https://cms.law/en/int/publication'
     scraper = CmsScraper(base_url)
     scraper.load_all_articles()  
-    scraper.fetch_data()         s
+    scraper.fetch_data()         
     scraper.download_html_and_save_csv()
     scraper.close()
 

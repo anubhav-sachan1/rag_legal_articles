@@ -2,7 +2,6 @@ import os
 import subprocess
 import json
 import argparse
-from concurrent.futures import ThreadPoolExecutor
 
 def run_script(script_name):
     try:
@@ -23,19 +22,17 @@ def load_crawler_scripts(config_file):
         print("Error decoding JSON from the configuration file.")
         return []
 
-def main(threads, config_file):
+def main(config_file):
     crawler_scripts = load_crawler_scripts(config_file)
     if not crawler_scripts:
         print("No crawler scripts to run.")
         return
     
-    with ThreadPoolExecutor(max_workers=threads) as executor:
-        executor.map(run_script, crawler_scripts)
+    for crawler_script in crawler_scripts:
+        run_script(crawler_script)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Run multiple crawler scripts concurrently.')
-    parser.add_argument('--threads', type=int, default=4, help='Number of threads to use for concurrent processing.')
     parser.add_argument('--config', type=str, default='crawler_config.json', help='Path to the JSON configuration file with crawler scripts.')
     args = parser.parse_args()
 
-    main(args.threads, args.config)
+    main(args.config)
