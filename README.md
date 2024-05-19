@@ -7,12 +7,16 @@
 
 ## Setup Instructions
 1. Unzip the zip file `code.zip`.
-2. **Create the Conda environment:**
+2. Navigate to the directory `harvey`
+```
+cd harvey
+```
+3. Create the Conda environment:
 Create a Conda environment using the provided `environment.yaml` file. This environment will set up Python 3.10 and all required packages.
 ```
 conda env create -f environment.yaml
 ```
-3. **Activate the Conda environment:**
+4. Activate the Conda environment:
 ```
 conda activate harvey_ai_infra_assignment
 ```
