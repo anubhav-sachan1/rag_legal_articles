@@ -1,0 +1,17 @@
+{
+    "crawler_scripts": [
+        "advant_beiten_crawler.py",
+        "goodwin_crawler.py",
+        "cms_crawler.py",
+        "hengeler_crawler.py",
+        "sidley_crawler.py",
+        "cooley_crawler.py",
+        "latham_watkins_crawler.py",
+        "simpson_thacher_crawler.py",
+        "debevoise_crawler.py",
+        "linklaters_crawler.py",
+        "skadden_crawler.py",
+        "gleisslutz_crawler.py",
+        "noerr_crawler.py"
+    ]
+}

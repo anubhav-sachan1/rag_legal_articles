@@ -10,4 +10,5 @@ while getopts ":c:" opt; do
   esac
 done
 
-python scraper/run_crawlers.py --config $CONFIG
+cd scraper
+python run_crawlers.py --config $CONFIG
