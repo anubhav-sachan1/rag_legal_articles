@@ -23,12 +23,10 @@ class HenglerScraper(Scraper):
                 load_more_button = WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "a.pill.articleFilter-loadMore"))
                 )
-                # Scroll the button into view and then click it
                 ActionChains(self.driver).move_to_element(load_more_button).perform()
                 load_more_button.click()
-                time.sleep(5)  # Wait for the page to load more articles
+                time.sleep(5) 
 
-                # Check the date of the last loaded article to decide if we need to load more
                 last_element = self.driver.find_elements(By.CSS_SELECTOR, 'div.article-date span')[-1]
                 last_date = datetime.strptime(last_element.text, '%d %B %Y').date()
             except Exception as e:
@@ -78,10 +76,9 @@ class HenglerScraper(Scraper):
 def main():
     base_url = 'https://hengeler-news.com/en/latest-articles'
     scraper = HenglerScraper(base_url)
-    #scraper.load_all_articles()  # Load all articles up to the target date
-    #scraper.fetch_data()  # Fetch data from loaded articles
-    #scraper.download_pdfs_and_prepare_csv()
-    scraper.write_chunks_csv("Hengeler Mueller", "div", "articlePage-content", True)
+    scraper.load_all_articles()
+    scraper.fetch_data()
+    scraper.download_pdfs_and_prepare_csv()
     scraper.close()
 
 if __name__ == "__main__":

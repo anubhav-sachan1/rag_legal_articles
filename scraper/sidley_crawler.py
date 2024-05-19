@@ -92,7 +92,6 @@ def main():
     scraper = SidleyScraper(base_url)
     scraper.fetch_data()
     scraper.download_content_and_prepare_csv()
-    scraper.write_chunks_csv("Sidley", "div", "rich-text-content", True)
     scraper.close()
 
 if __name__ == "__main__":

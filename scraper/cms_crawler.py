@@ -79,10 +79,9 @@ class CmsScraper(Scraper):
 def main():
     base_url = 'https://cms.law/en/int/publication'
     scraper = CmsScraper(base_url)
-    scraper.load_all_articles()  # Load all relevant articles first
-    scraper.fetch_data()         # Then fetch data from all loaded articles
+    scraper.load_all_articles()  
+    scraper.fetch_data()         s
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("CMS", "div", "block_rich_publication block_rich_publication_text_block rich-publication-richtext block-view_full", True)
     scraper.close()
 
 if __name__ == "__main__":

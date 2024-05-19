@@ -12,7 +12,6 @@ class NoerrScraper(Scraper):
 
     def accept_cookies(self):
         try:
-            # Wait until the cookie button is clickable and then click it
             WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, 'a#cookie-apply-all'))
             ).click()
@@ -83,7 +82,6 @@ def main():
     scraper = NoerrScraper(base_url)
     scraper.fetch_data()
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("Noerr","div","rte MuiBox-root css-g65ho")
     scraper.close()
 
 if __name__ == "__main__":

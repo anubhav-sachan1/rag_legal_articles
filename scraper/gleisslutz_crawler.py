@@ -91,7 +91,6 @@ def main():
     scraper = GleissLutzScraper(base_url)
     scraper.fetch_data()
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("Gleiss Lutz", "div", "paragraph__content-container", True)
     scraper.close()
 
 if __name__ == "__main__":

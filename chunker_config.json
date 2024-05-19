@@ -1,0 +1,82 @@
+{
+    "scrapers": [
+        {
+            "input_directory": "scraper/cms.law",
+            "firm_name": "CMS",
+            "container_element": "div",
+            "class_name": "block_rich_publication block_rich_publication_text_block rich-publication-richtext block-view_full"
+        },
+        {
+            "input_directory": "scraper/hengeler-news.com",
+            "firm_name": "Hengeler Mueller",
+            "container_element": "div",
+            "class_name": "articlePage-content"
+        },
+        {
+            "input_directory": "scraper/www.advant-beiten.com",
+            "firm_name": "ADVANT Beiten",
+            "container_element": "div",
+            "class_name": "text g-m--up-6 u-padbot--1 blog__text--full text"
+        },
+        {
+            "input_directory": "scraper/www.cooley.com",
+            "firm_name": "Cooley",
+            "container_element": "article",
+            "class_name": "rich-text wysiwyg-content"
+        },
+        {
+            "input_directory": "scraper/www.debevoise.com",
+            "firm_name": "Debevoise & Plimpton",
+            "container_element": "div",
+            "class_name": "text-module"
+        },
+        {
+            "input_directory": "scraper/www.gleisslutz.com",
+            "firm_name": "Gleiss Lutz",
+            "container_element": "div",
+            "class_name": "paragraph__content-container"
+        },
+        {
+            "input_directory": "scraper/www.goodwinlaw.com",
+            "firm_name": "Goodwin",
+            "container_element": "div",
+            "class_name": "rich-text"
+        },
+        {
+            "input_directory": "scraper/www.linklaters.com",
+            "firm_name": "Linklaters",
+            "container_element": "div",
+            "class_name": "content-block__content"
+        },
+        {
+            "input_directory": "scraper/www.lw.com",
+            "firm_name": "Latham & Watkins",
+            "container_element": "div",
+            "class_name": "component-content"
+        },
+        {
+            "input_directory": "scraper/www.noerr.com",
+            "firm_name": "Noerr",
+            "container_element": "div",
+            "class_name": "rte MuiBox-root css-g65ho"
+        },
+        {
+            "input_directory": "scraper/www.sidley.com",
+            "firm_name": "Sidley",
+            "container_element": "div",
+            "class_name": "rich-text-content"
+        },
+        {
+            "input_directory": "scraper/www.skadden.com",
+            "firm_name": "Skadden",
+            "container_element": "div",
+            "class_name": "article-body"
+        },
+        {
+            "input_directory": "scraper/www.stblaw.com",
+            "firm_name": "Simpson Thacher & Bartlett",
+            "container_element": "div",
+            "class_name": "show-when-reading-inner"
+        }
+    ]
+}

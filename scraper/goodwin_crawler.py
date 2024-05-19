@@ -11,11 +11,9 @@ class GoodwinScraper(Scraper):
     @staticmethod
     def contains_date(string, date_format="%B %d, %Y"):
         try:
-            # Try to parse the string into a datetime object according to the specified format
             datetime.strptime(string, date_format)
             return True
         except ValueError:
-            # If ValueError is raised, it means the string does not match the date format
             return False
 
     def accept_cookies(self):
@@ -90,7 +88,6 @@ def main():
     page_number = 378
     scraper.fetch_data(page_number)
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("Goodwin","div","rich-text")
     scraper.close()
 
 if __name__ == "__main__":

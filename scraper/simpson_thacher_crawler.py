@@ -110,7 +110,6 @@ def main():
     scraper = SimpsonThacherScraper(base_url)
     scraper.fetch_data()
     scraper.download_htmls_and_prepare_csv()
-    scraper.write_chunks_csv("Simpson Thacher & Bartlett", "div", "show-when-reading-inner", True)
     scraper.close()
 
 if __name__ == "__main__":

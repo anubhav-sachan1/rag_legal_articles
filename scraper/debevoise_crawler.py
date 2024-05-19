@@ -109,7 +109,6 @@ def main():
     scraper = DebevoiseScraper(base_url)
     scraper.fetch_data()
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("Debevoise & Plimpton","div","text-module",True)
     scraper.close()
 
 if __name__ == "__main__":

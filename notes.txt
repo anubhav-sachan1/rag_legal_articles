@@ -13,15 +13,16 @@ Hengeler Mueller	https://hengeler-news.com/en/latest-articles
 Gleiss Lutz	https://www.gleisslutz.com/en/news-events/know-how
 Noerr	https://www.noerr.com/en/insights?i-fc-type=News
 
-1. Finish Linklaters
-2. Clean up Skadden to resemble others
+1. Finish Linklaters - Done
+2. Clean up Skadden to resemble others - Done
 3. Create a file for handling dependencies and creating a new Conda environment
 4. Unify all crawlers
-5. Create a mutlithreading script to run all crawlers
-6. Add multithreading in the embedding script
-7. Add command line argument or config file to specify directories which have to be embedded/indexed
-8. Maybe add headless mode for scraping?
-9. Create README
-10. Create ZIPs and submit
+5. Separate chunking from scraping
+6. Create a mutlithreading script to run all crawlers - Done?
+7. Add multithreading in the embedding script - Done
+8. Add command line argument or config file to specify directories which have to be embedded/indexed - Done
+9. Maybe add headless mode for scraping?
+10. Create README
+11. Create ZIPs and submit
 
 

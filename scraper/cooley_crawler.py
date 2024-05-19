@@ -82,7 +82,6 @@ def main():
     
     scraper.fetch_data()
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("Cooley", "article", "rich-text wysiwyg-content")
     scraper.close()
 
 if __name__ == "__main__":

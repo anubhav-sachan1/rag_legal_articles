@@ -102,7 +102,6 @@ def main():
     scraper = LathamWatkinsScraper(base_url)
     scraper.fetch_data()
     scraper.download_content_and_prepare_csv()
-    scraper.write_chunks_csv("Latham & Watkins", "div", "component-content", True)
     scraper.close()
 
 if __name__ == "__main__":
