@@ -32,6 +32,7 @@ def main(config_file):
         run_script(crawler_script)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Run multiple crawler scripts concurrently.')
     parser.add_argument('--config', type=str, default='crawler_config.json', help='Path to the JSON configuration file with crawler scripts.')
     args = parser.parse_args()
 
