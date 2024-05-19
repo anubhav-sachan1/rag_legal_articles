@@ -33,22 +33,29 @@ class SkaddenScraper(Scraper):
                     title = article.find_element(By.CSS_SELECTOR, 'span.listing-articles-title-label.ng-binding').text.strip()
                     link = article.find_element(By.CSS_SELECTOR, 'a.listing-articles-title').get_attribute('href')
                     self.data.append({'title': title, 'url': link, 'date': date_str})
-            except Exception as e:
-                print(f"Error: {e}")    
-                continue
+            except Exception:
+                pass
 
     def download_html_and_save_csv(self):
         csv_data = []
         for entry in self.data:
             try:
                 self.driver.get(entry['url'])
-                article_element = self.driver.find_element(By.CSS_SELECTOR, "div.article-body-copy")
-                html_content = article_element.get_attribute('outerHTML')
-                file_path = self.download_page_as_html(html_content, f"{entry['title']}.html")
-                csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
+                article_element = self.driver.find_element(By.CSS_SELECTOR, "div.article-body")
+                links = article_element.find_elements(By.CSS_SELECTOR, "a")
+                pdf_urls = [link.get_attribute('href') for link in links if 'pdf' in link.get_attribute('href')]
+                if len(pdf_urls) > 0:
+                    pdf_url = pdf_urls[0]
+                    if not pdf_url.startswith('http'):
+                        pdf_url = f"{self.get_scheme_and_domain()}{pdf_url}"
+                    self.download_pdf_with_user_agent(pdf_url, f"{entry['title']}.pdf")
+                    csv_row = {'title': entry['title'], 'url': pdf_url, 'date': entry['date']}
+                else:
+                    html_content = article_element.get_attribute('outerHTML')
+                    self.download_page_as_html(html_content, f"{entry['title']}.html")
+                    csv_row = {'title': entry['title'], 'url': entry['url'], 'date': entry['date']}
                 csv_data.append(csv_row)
-            except Exception as e:
-                print(f"Error: {e}")
+            except Exception:
                 pass
         
         self.write_csv(csv_data)
@@ -60,7 +67,7 @@ def main():
     scraper = SkaddenScraper(base_url, last_date_str=last_date_str, date_formats=date_formats)
     scraper.fetch_data()
     scraper.download_html_and_save_csv()
-    scraper.write_chunks_csv("Skadden","div","article-body-copy", True)
+    scraper.write_chunks_csv("Skadden","div","article-body", True)
     scraper.close()
 
 if __name__ == "__main__":

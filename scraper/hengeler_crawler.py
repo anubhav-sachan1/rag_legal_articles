@@ -78,9 +78,9 @@ class HenglerScraper(Scraper):
 def main():
     base_url = 'https://hengeler-news.com/en/latest-articles'
     scraper = HenglerScraper(base_url)
-    #scraper.load_all_articles()  # Load all articles up to the target date
-    #scraper.fetch_data()  # Fetch data from loaded articles
-    #scraper.download_pdfs_and_prepare_csv()
+    scraper.load_all_articles()  # Load all articles up to the target date
+    scraper.fetch_data()  # Fetch data from loaded articles
+    scraper.download_pdfs_and_prepare_csv()
     scraper.write_chunks_csv("Hengeler Mueller", "div", "articlePage-content", True)
     scraper.close()
 

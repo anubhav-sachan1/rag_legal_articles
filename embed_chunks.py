@@ -80,7 +80,8 @@ def main():
         "scraper/www.sidley.com",
         "scraper/www.stblaw.com",
         "scraper/cms.law",
-        "scraper/hengeler-news.com"
+        "scraper/hengeler-news.com",
+        "scraper/www.linklaters.com"
         ]
     api_key_path = 'secret_key.txt'
     with open(api_key_path, 'r') as f:
