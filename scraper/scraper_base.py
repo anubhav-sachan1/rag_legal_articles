@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import csv
 import os
 from datetime import datetime
+from enum import Enum
 
 class Scraper:
     HTML_PDF_FOLDER_NAME = 'files'
@@ -76,3 +77,8 @@ class Scraper:
     @classmethod
     def convert_to_date_type(cls, date_str, format_str):
         return datetime.strptime(date_str, format_str)
+
+class ScraperType(Enum):
+    PDF = 1
+    HTML = 2
+    URL = 3
