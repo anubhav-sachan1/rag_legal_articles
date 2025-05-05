@@ -1,4 +1,4 @@
-# AI Infrastructure Project for Harvey.
+# RAG for parsing legal websites' articles.
 
 ## System Requirements
 - Python 3.10
